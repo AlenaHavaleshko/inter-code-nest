@@ -20,7 +20,7 @@ export class CandidatesService {
     return newCandidate;
   }
   // GET /candidates
-  findAll(status?: CandidateStatus): Candidate[] {
+  findAllByStatus(status?: CandidateStatus): Candidate[] {
     if (status) {
       return this.candidates.filter((candidate) => candidate.status === status);
     }

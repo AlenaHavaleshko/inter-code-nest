@@ -25,7 +25,7 @@ export class CandidatesController {
 
   @Get()
   findAll(@Query() query: FindCandidatesQueryDto) {
-    return this.candidatesService.findAll(query.status);
+    return this.candidatesService.findAllByStatus(query.status);
   }
 
   @Get(':id')
