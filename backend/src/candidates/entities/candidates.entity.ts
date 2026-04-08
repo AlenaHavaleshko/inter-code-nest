@@ -7,12 +7,12 @@ export enum CandidateStatus {
 }
 
 export class Candidate {
-  id?: string;
-  name?: string;
+  id!: string;
+  name!: string;
   email!: string;
-  phone?: string;
-  position?: string;
-  status?: CandidateStatus;
-  notes?: string;
-  createdAt?: Date;
+  phone!: string;
+  position!: string;
+  status!: CandidateStatus;
+  notes!: string;
+  createdAt!: Date;
 }

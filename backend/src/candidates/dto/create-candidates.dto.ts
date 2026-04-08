@@ -3,19 +3,19 @@ import { CandidateStatus } from '../entities/candidates.entity';
 
 export class CreateCandidateDto {
   @IsNotEmpty()
-  name!: string;
+  name?: string;
 
   @IsEmail()
   email!: string;
 
   @IsNotEmpty()
-  phone!: string;
+  phone?: string;
 
   @IsNotEmpty()
-  position!: string;
+  position?: string;
 
   @IsEnum(CandidateStatus)
-  status!: CandidateStatus;
+  status?: CandidateStatus;
 
   @IsOptional()
   notes?: string;
