@@ -1,19 +1,20 @@
-import { IsEmail, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional } from 'class-validator';
 import { CandidateStatus } from '../entities/candidates.entity';
 
 export class CreateCandidateDto {
-  @IsNotEmpty()
+  @IsOptional()
   name?: string;
 
   @IsEmail()
   email!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   phone?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   position?: string;
 
+  @IsOptional()
   @IsEnum(CandidateStatus)
   status?: CandidateStatus;
 

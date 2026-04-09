@@ -8,11 +8,11 @@ export enum CandidateStatus {
 
 export class Candidate {
   id!: string;
-  name!: string;
+  name?: string;
   email!: string;
-  phone!: string;
-  position!: string;
-  status!: CandidateStatus;
-  notes!: string;
+  phone?: string;
+  position?: string;
+  status?: CandidateStatus;
+  notes?: string;
   createdAt!: Date;
 }
