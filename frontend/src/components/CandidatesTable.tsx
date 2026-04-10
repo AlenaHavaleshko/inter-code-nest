@@ -6,7 +6,11 @@ import {
   Loader,
   Center,
   Text,
+  Card,
+  Stack,
+  ScrollArea,
 } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { CandidateStatus } from "../types/candidate";
 import type { Candidate } from "../types/candidate";
 
@@ -36,12 +40,72 @@ interface CandidatesTableProps {
   onDelete: (id: string) => void;
 }
 
+function CandidateCards({
+  candidates,
+  onEdit,
+  onDelete,
+}: Omit<CandidatesTableProps, "loading">) {
+  return (
+    <Stack gap="sm">
+      {candidates.map((c) => (
+        <Card key={c.id} withBorder padding="md" radius="md">
+          <Group justify="space-between" mb="xs" wrap="nowrap">
+            <Text fw={600} size="sm" style={truncate}>
+              {c.name}
+            </Text>
+            <Badge color={STATUS_COLORS[c.status]} size="sm">
+              {c.status}
+            </Badge>
+          </Group>
+          <Text size="xs" c="dimmed" style={truncate}>
+            {c.email}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {c.phone}
+          </Text>
+          <Text size="xs" mt={4} style={truncate}>
+            {c.position}
+          </Text>
+          {c.notes && (
+            <Text size="xs" mt={4} c="dimmed" style={wrap}>
+              {c.notes}
+            </Text>
+          )}
+          <Text size="xs" mt={4} c="dimmed">
+            {new Date(c.createdAt).toLocaleDateString()}
+          </Text>
+          <Group gap={6} mt="sm">
+            <Button
+              size="xs"
+              variant="light"
+              color="blue"
+              onClick={() => onEdit(c)}
+            >
+              Edit
+            </Button>
+            <Button
+              size="xs"
+              variant="light"
+              color="red"
+              onClick={() => onDelete(c.id)}
+            >
+              Delete
+            </Button>
+          </Group>
+        </Card>
+      ))}
+    </Stack>
+  );
+}
+
 export function CandidatesTable({
   candidates,
   loading,
   onEdit,
   onDelete,
 }: CandidatesTableProps) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   if (loading) {
     return (
       <Center h={200}>
@@ -58,77 +122,89 @@ export function CandidatesTable({
     );
   }
 
+  if (isMobile) {
+    return (
+      <CandidateCards
+        candidates={candidates}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    );
+  }
+
   return (
-    <Table
-      striped
-      highlightOnHover
-      withTableBorder
-      withColumnBorders
-      style={{ width: "100%" }}
-    >
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th style={{ width: "14%" }}>Name</Table.Th>
-          <Table.Th style={{ width: "13%" }}>Email</Table.Th>
-          <Table.Th style={{ width: "11%" }}>Phone</Table.Th>
-          <Table.Th style={{ width: "13%" }}>Position</Table.Th>
-          <Table.Th style={{ width: "14%" }}>Status</Table.Th>
-          <Table.Th style={{ width: "17%" }}>Notes</Table.Th>
-          <Table.Th style={{ width: "9%" }}>Created</Table.Th>
-          <Table.Th style={{ width: "9%" }}>Actions</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {candidates.map((c) => (
-          <Table.Tr key={c.id}>
-            <Table.Td>
-              <div style={truncate}>{c.name}</div>
-            </Table.Td>
-            <Table.Td>
-              <div style={truncate}>{c.email}</div>
-            </Table.Td>
-            <Table.Td>{c.phone}</Table.Td>
-            <Table.Td>
-              <div style={truncate}>{c.position}</div>
-            </Table.Td>
-            <Table.Td style={{ whiteSpace: "nowrap" }}>
-              <Badge
-                color={STATUS_COLORS[c.status]}
-                style={{ maxWidth: "none" }}
-                styles={{
-                  label: { overflow: "visible", textOverflow: "clip" },
-                }}
-              >
-                {c.status}
-              </Badge>
-            </Table.Td>
-            <Table.Td>
-              <div style={wrap}>{c.notes}</div>
-            </Table.Td>
-            <Table.Td>{new Date(c.createdAt).toLocaleDateString()}</Table.Td>
-            <Table.Td>
-              <Group gap={6} wrap="nowrap">
-                <Button
-                  size="xs"
-                  variant="light"
-                  color="blue"
-                  onClick={() => onEdit(c)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="xs"
-                  variant="light"
-                  color="red"
-                  onClick={() => onDelete(c.id)}
-                >
-                  Delete
-                </Button>
-              </Group>
-            </Table.Td>
+    <ScrollArea>
+      <Table
+        striped
+        highlightOnHover
+        withTableBorder
+        withColumnBorders
+        style={{ width: "100%" }}
+      >
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th style={{ width: "14%" }}>Name</Table.Th>
+            <Table.Th style={{ width: "13%" }}>Email</Table.Th>
+            <Table.Th style={{ width: "11%" }}>Phone</Table.Th>
+            <Table.Th style={{ width: "13%" }}>Position</Table.Th>
+            <Table.Th style={{ width: "14%" }}>Status</Table.Th>
+            <Table.Th style={{ width: "17%" }}>Notes</Table.Th>
+            <Table.Th style={{ width: "9%" }}>Created</Table.Th>
+            <Table.Th style={{ width: "9%" }}>Actions</Table.Th>
           </Table.Tr>
-        ))}
-      </Table.Tbody>
-    </Table>
+        </Table.Thead>
+        <Table.Tbody>
+          {candidates.map((c) => (
+            <Table.Tr key={c.id}>
+              <Table.Td>
+                <div style={truncate}>{c.name}</div>
+              </Table.Td>
+              <Table.Td>
+                <div style={truncate}>{c.email}</div>
+              </Table.Td>
+              <Table.Td>{c.phone}</Table.Td>
+              <Table.Td>
+                <div style={truncate}>{c.position}</div>
+              </Table.Td>
+              <Table.Td style={{ whiteSpace: "nowrap" }}>
+                <Badge
+                  color={STATUS_COLORS[c.status]}
+                  style={{ maxWidth: "none" }}
+                  styles={{
+                    label: { overflow: "visible", textOverflow: "clip" },
+                  }}
+                >
+                  {c.status}
+                </Badge>
+              </Table.Td>
+              <Table.Td>
+                <div style={wrap}>{c.notes}</div>
+              </Table.Td>
+              <Table.Td>{new Date(c.createdAt).toLocaleDateString()}</Table.Td>
+              <Table.Td>
+                <Group gap={6} wrap="nowrap">
+                  <Button
+                    size="xs"
+                    variant="light"
+                    color="blue"
+                    onClick={() => onEdit(c)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="xs"
+                    variant="light"
+                    color="red"
+                    onClick={() => onDelete(c.id)}
+                  >
+                    Delete
+                  </Button>
+                </Group>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </ScrollArea>
   );
 }
